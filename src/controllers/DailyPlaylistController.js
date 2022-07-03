@@ -10,7 +10,12 @@ class DailyPlaylistController {
         const isTodayPlaylistExists = (await DailyPlaylist.find({ date: { $gte: currentYear + '-' + currentMonth + '-' + currentDay } })).length
 
 
+
         if (! isTodayPlaylistExists) {
+            for (let song in playlist) {
+                playlist[song] = playlist[song].trim().replace(/\n/g, '')
+            }
+            
             const dayliPlaylist = new DailyPlaylist({ date,  playlist })
 
             await dayliPlaylist.save()
