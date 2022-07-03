@@ -4,18 +4,15 @@ const DailyPlaylist = require('../models/DailyPlaylist')
 class DailyPlaylistController {
     async addNewDailyPlaylist(playlist) {
         const date = new Date()
-        const currentYear = date.getFullYear()
-        const currentMonth = date.getMonth() + 1
-        const currentDay = date.getDate()
-        const isTodayPlaylistExists = (await DailyPlaylist.find({ date: { $gte: currentYear + '-' + currentMonth + '-' + currentDay } })).length
+        const currentDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+        const isTodayPlaylistExists = (await DailyPlaylist.find({ date: { $gte: currentDate } })).length
 
 
-
-        if (! isTodayPlaylistExists) {
+        if (!isTodayPlaylistExists) {
             for (let song in playlist) {
                 playlist[song] = playlist[song].trim().replace(/\n/g, '')
             }
-            
+
             const dayliPlaylist = new DailyPlaylist({ date,  playlist })
 
             await dayliPlaylist.save()
